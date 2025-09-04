@@ -131,8 +131,8 @@ fun ExpenseEntryScreen(
                 .fillMaxWidth()
                 .height(120.dp)
                 .clickable {
-//                    receipt = "mock_receipt.jpg"
-//                    Toast.makeText(ctx, "Mock receipt attached", Toast.LENGTH_SHORT).show()
+                    receipt = "mock_receipt.jpg"
+                    Toast.makeText(ctx, "Receipt attached", Toast.LENGTH_SHORT).show()
                 },
             contentAlignment = Alignment.Center
         ) {
@@ -164,7 +164,6 @@ fun ExpenseEntryScreen(
 
                 Toast.makeText(ctx, "Expense Added!", Toast.LENGTH_SHORT).show()
 
-                // Reset fields
                 title = ""
                 amount = ""
                 category = "Staff"
@@ -195,9 +194,8 @@ fun PreviewExpenseEntryScreen() {
 
     ExpenseEntryScreen(
         navController = mockNavController,
-        totalToday = 500L, // Mock total
+        totalToday = 500L,
         onSubmit = { title, amount, category, notes, receipt, timestamp, date ->
-            // Mock handler (no real DB insert here)
             println("Expense Submitted -> $title | ₹$amount | $category")
         }
     )

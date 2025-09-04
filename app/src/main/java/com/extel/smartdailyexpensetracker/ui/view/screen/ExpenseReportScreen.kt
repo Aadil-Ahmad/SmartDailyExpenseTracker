@@ -56,7 +56,6 @@ fun ExpenseReportScreen(
 
         Spacer(Modifier.height(16.dp))
 
-        // Daily totals
         Text("Daily Totals", style = MaterialTheme.typography.titleMedium)
         dailyTotals.forEach { (date, total) ->
             Text("${date}: ₹${total}")
@@ -64,7 +63,6 @@ fun ExpenseReportScreen(
 
         Spacer(Modifier.height(16.dp))
 
-        // Category totals
         Text("Category-wise Totals", style = MaterialTheme.typography.titleMedium)
         categoryTotals.forEach { (category, total) ->
             Text("$category: ₹${total }")
@@ -72,7 +70,6 @@ fun ExpenseReportScreen(
 
         Spacer(Modifier.height(24.dp))
 
-        // Mock Chart
         Text("Mock Bar Chart", style = MaterialTheme.typography.titleMedium)
         Spacer(Modifier.height(8.dp))
 
@@ -96,7 +93,6 @@ fun ExpenseReportScreen(
 
         Spacer(Modifier.height(24.dp))
 
-        // Export Section
         Text("Export Options", style = MaterialTheme.typography.titleMedium)
 
         Row(
@@ -136,7 +132,6 @@ fun ExpenseReportScreen(
 @Composable
 fun PreviewExpenseReportScreen() {
     val mockNavController = rememberNavController()
-
 
     val fakeExpenses = listOf(
         Expense(
@@ -186,12 +181,7 @@ fun PreviewExpenseReportScreen() {
         )
     )
 
-    // Local fake ViewModel substitute
     val fakeViewModel = object : MainViewModel() {
-        @Composable
-        fun collectFakeExpenses(): State<List<Expense>> {
-            return remember { mutableStateOf(fakeExpenses) }
-        }
     }
 
     ExpenseReportScreen(

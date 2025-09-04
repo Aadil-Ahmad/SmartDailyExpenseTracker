@@ -9,7 +9,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -68,7 +68,7 @@ fun ExpenseListScreen(
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            // Filters Row
+            
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -91,13 +91,11 @@ fun ExpenseListScreen(
 
             Spacer(Modifier.height(16.dp))
 
-            // Totals
             Text("Total Count: $totalCount")
             Text("Total Amount: ₹${totalAmount / 100.0}", fontWeight = FontWeight.Bold)
 
             Spacer(Modifier.height(16.dp))
 
-            // Empty State / List
             if (filteredExpenses.isEmpty()) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
