@@ -1,41 +1,46 @@
 package com.extel.smartdailyexpensetracker.ui.view.screen
 
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.ui.*
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.*
 import androidx.navigation.NavController
-import kotlinx.coroutines.delay
+import androidx.navigation.compose.rememberNavController
 import com.extel.smartdailyexpensetracker.R
+import com.extel.smartdailyexpensetracker.utill.Routes
+import java.time.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExpenseEntryScreen(
     navController: NavController,
     totalToday: Long = 0L,
-    onSubmit: (title: String, amount: Long, category: String, notes: String?, receipt: String?) -> Unit
+    onSubmit: (
+        title: String,
+        amount: Long,
+        category: String,
+        notes: String?,
+        receipt: String?,
+        timestamp: LocalDateTime,
+        date: LocalDate
+    ) -> Unit
 ) {
     val ctx = LocalContext.current
-
     var title by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
     var category by remember { mutableStateOf("Staff") }
@@ -58,7 +63,7 @@ fun ExpenseEntryScreen(
         verticalArrangement = Arrangement.Top
     ) {
         Text(
-            text = "Total Spent Today: ₹${totalToday / 100.0}",
+            text = "Total Spent Today: ₹${totalToday }",
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
             color = MaterialTheme.colorScheme.primary
@@ -126,8 +131,8 @@ fun ExpenseEntryScreen(
                 .fillMaxWidth()
                 .height(120.dp)
                 .clickable {
-                    receipt = "mock_receipt.jpg"
-                    Toast.makeText(ctx, "Mock receipt attached", Toast.LENGTH_SHORT).show()
+//                    receipt = "mock_receipt.jpg"
+//                    Toast.makeText(ctx, "Mock receipt attached", Toast.LENGTH_SHORT).show()
                 },
             contentAlignment = Alignment.Center
         ) {
@@ -150,20 +155,23 @@ fun ExpenseEntryScreen(
                     Toast.makeText(ctx, "Please enter valid Title and Amount", Toast.LENGTH_SHORT).show()
                     return@Button
                 }
+
+                val nowDate = LocalDate.now()
+                val nowTimestamp = LocalDateTime.now()
+
                 isSubmitting = true
-                onSubmit(title, amount.toLong(), category, notes.ifBlank { null }, receipt)
+                onSubmit(title, amount.toLong(), category, notes.ifBlank { null }, receipt, nowTimestamp, nowDate)
+
                 Toast.makeText(ctx, "Expense Added!", Toast.LENGTH_SHORT).show()
 
+                // Reset fields
                 title = ""
                 amount = ""
                 category = "Staff"
                 notes = ""
                 receipt = null
+                navController.navigate(Routes.ExpenseListScreen)
 
-//                LaunchedEffect(Unit) {
-//                    delay(500)
-//                    isSubmitting = false
-//                }
             },
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
@@ -177,4 +185,20 @@ fun ExpenseEntryScreen(
             Text("Adding expense...", modifier = Modifier.padding(top = 8.dp))
         }
     }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewExpenseEntryScreen() {
+    val mockNavController = rememberNavController()
+
+    ExpenseEntryScreen(
+        navController = mockNavController,
+        totalToday = 500L, // Mock total
+        onSubmit = { title, amount, category, notes, receipt, timestamp, date ->
+            // Mock handler (no real DB insert here)
+            println("Expense Submitted -> $title | ₹$amount | $category")
+        }
+    )
 }
